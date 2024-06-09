@@ -6,7 +6,9 @@
     <div class="col-4">
         <div class="card mb-4 box-shadow">
             <div class="card-header">
+                {% if product.imagery %}
                 <img src="{{ product.imagery | media_filter }}">
+                {% endif %}
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal">{{ product.category}}</h4>
                 </div>
