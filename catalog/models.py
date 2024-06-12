@@ -15,6 +15,7 @@ class Category(models.Model):
     def __str__(self):
         return f'{self.category_name}'
 
+
 class Product(models.Model):
     objects = None
     product_name = models.CharField(max_length=150, verbose_name='Наименование продукта')
@@ -24,7 +25,6 @@ class Product(models.Model):
     cost_product = models.FloatField(verbose_name='Цена за покупку')
     created_at = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateField(auto_now=True, verbose_name='Дата последнего изменения')
-
 
     class Meta:
         verbose_name = 'Продукт'

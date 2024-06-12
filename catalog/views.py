@@ -1,33 +1,38 @@
-from django.shortcuts import render, get_object_or_404
-
+from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic.edit import FormView
 from catalog.models import Product
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 
 
-# Create your views here.
-
-def home(request):
-    return render(request, 'home.html')
-
-
-def products_list(request):
-    # Если есть связанные модели, используйте select_related или prefetch_related
-    products = Product.objects.all().select_related('category')
-    context = {"products": products}
-    return render(request, "products_list.html", context)
+# Для простой страницы без контекста
+class HomeView(TemplateView):
+    template_name = 'home.html'
 
 
+# Для списка продуктов
+class ProductsListView(ListView):
+    model = Product
+    context_object_name = 'products'
+    template_name = 'products_list.html'
+    queryset = Product.objects.all().select_related('category')
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    context = {'product': product}
-    return render(request, "product_detail.html", context)
+
+# Для детального просмотра продукта
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'product_detail.html'
+    context_object_name = 'product'
 
 
-# Задание 19.1
-def contacts(request):
-    if request.method == 'POST':
+# Для контактной формы
+class ContactsView(FormView):
+    template_name = 'contacts.html'
+    success_url = '/thanks/'  # Укажите URL для перенаправления после успешной отправки
+
+    def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         message = request.POST.get('message')
         print(f'{name} ({phone}) написал: {message}')
-    return render(request, "contacts.html")
+        return HttpResponse('Сообщение отправлено')  # Или перенаправление на другую страницу
